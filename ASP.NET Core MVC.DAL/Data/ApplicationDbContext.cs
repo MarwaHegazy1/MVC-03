@@ -9,14 +9,21 @@ using System.Threading.Tasks;
 
 namespace ASP.NET_Core_MVC.DAL.Data
 {
-    internal class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server = .; Database = MVCApplictaion03; Trusted_Connection = True;");
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :base(options)
+        {
 
+        }
+        #region In Case not use DI && In Case use console Appliction 
+        //public ApplicationDbContext() { }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //=> optionsBuilder.UseSqlServer("Server = .; Database = MVCApplictaion03; Trusted_Connection = True;");
+
+        #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration<Department>(new DepartmentCnfigurations())
+            modelBuilder.ApplyConfiguration<Department>(new DepartmentCnfigurations());
         }
         public DbSet<Department> Departments { get; set; }
     }

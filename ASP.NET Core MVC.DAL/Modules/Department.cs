@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ASP.NET_Core_MVC.DAL.Modules
 {
     //Model
-    internal class Department
+    public class Department
     {
         public int Id { get; set; }
                   // ErrorMessage => in View Module not here
