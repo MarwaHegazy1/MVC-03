@@ -1,5 +1,6 @@
 ﻿using ASP.NET_Core_MVC.BLL.Interfaces;
 using ASP.NET_Core_MVC.BLL.Repositories;
+using ASP.NET_Core_MVC.DAL.Modules;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASP.NET_Core_MVC_03.PL.Controllers
@@ -12,8 +13,28 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             _departmentsRepo = departmentsRepo;
         }
         public IActionResult Index()
-        { 
+        {
+            var departments = _departmentsRepo.GetAll();
+            return View(departments);
+        }
+
+        public IActionResult Create()
+        {
             return View();
         }
+        [HttpPost]
+        public IActionResult Create(Department department)
+        {
+            if (ModelState.IsValid)
+            {
+                var count = _departmentsRepo.Add(department); 
+                if (count > 0)
+                    return RedirectToAction(nameof(Index));
+
+            }
+            return View(department);
+            
+        }
+
     }
 }
