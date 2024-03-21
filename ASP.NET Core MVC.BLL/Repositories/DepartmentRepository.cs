@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ASP.NET_Core_MVC.BLL.Repositories
 {
-    internal class DepartmentRepository : IDepartmentRepository
+    public class DepartmentRepository : IDepartmentRepository
     {   //Object member 
         private readonly ApplicationDbContext _dbContext;
 

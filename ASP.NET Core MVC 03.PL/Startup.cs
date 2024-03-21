@@ -1,3 +1,5 @@
+using ASP.NET_Core_MVC.BLL.Interfaces;
+using ASP.NET_Core_MVC.BLL.Repositories;
 using ASP.NET_Core_MVC.DAL.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,6 +35,8 @@ namespace ASP.NET_Core_MVC_03.PL
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

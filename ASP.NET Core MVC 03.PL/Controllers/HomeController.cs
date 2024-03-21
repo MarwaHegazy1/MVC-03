@@ -1,4 +1,4 @@
-﻿using ASP.NET_Core_MVC_03.PL.Models;
+﻿using ASP.NET_Core_MVC_03.PL.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
