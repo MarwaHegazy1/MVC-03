@@ -36,5 +36,18 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             
         }
 
+        public IActionResult Details(int? id)
+        {
+            if (!id.HasValue)
+                return BadRequest(); // 400
+
+            var department = _departmentsRepo.Get(id.Value);
+
+            if (department is null)
+                return NotFound(); // 404
+
+            return View(department);
+        }
+
     }
 }
