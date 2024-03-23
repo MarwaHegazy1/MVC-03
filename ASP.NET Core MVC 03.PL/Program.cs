@@ -13,7 +13,10 @@ namespace ASP.NET_Core_MVC_03.PL
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            //IHostBuilder => Builder for Kestrel
+            var hostBuilder = CreateHostBuilder(args).Build();
+            //Data Seeding  //Apply Migrations
+                hostBuilder.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
