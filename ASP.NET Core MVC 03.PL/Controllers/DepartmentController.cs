@@ -30,13 +30,11 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
                 var count = _departmentsRepo.Add(department); 
                 if (count > 0)
                     return RedirectToAction(nameof(Index));
-
             }
-            return View(department);
-            
+            return View(department); 
         }
 
-        public IActionResult Details(int? id)
+        public IActionResult Details(int? id, string viewName = "Details")
         {
             if (!id.HasValue)
                 return BadRequest(); // 400
@@ -46,7 +44,7 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             if (department is null)
                 return NotFound(); // 404
 
-            return View(department);
+            return View(viewName, department);
         }
 
     }
