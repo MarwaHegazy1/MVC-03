@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ASP.NET_Core_MVC.BLL.Repositories
 {
-    internal class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
+    public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
         //use inherite dbContext 
         public EmployeeRepository(ApplicationDbContext dbContext) : base(dbContext)
