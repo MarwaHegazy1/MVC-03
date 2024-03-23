@@ -82,6 +82,28 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
                 return View(employee);
             }
         }
+        public IActionResult Delete(int? id)
+        {
+            return Details(id, "Delete");
+        }
+        [HttpPost]
+        public IActionResult Delete(Employee employee)
+        {
+            try
+            {
+                _employeesRepo.Delete(employee);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                if (_env.IsDevelopment())
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                else
+                    ModelState.AddModelError(string.Empty, "An Error Has Occurred during Updating the Employee");
+
+                return View(employee);
+            }
+        }
     }
 
 }
