@@ -14,7 +14,8 @@ namespace ASP.NET_Core_MVC.DAL.Modules
                   // ErrorMessage => in View Module not here
       //  [Required(ErrorMessage ="Code is Required !!!")]// Mapped to not null constrain in DB, Validation in DB & App
         public string Code { get; set; }
-        //[Required]
+
+        [Required]
         public string Name { get; set; }// Option => ASP.NET Core 5
         [Display(Name = "Date Of Creation")]
         public DateTime DateOfCreation { get; set; }
