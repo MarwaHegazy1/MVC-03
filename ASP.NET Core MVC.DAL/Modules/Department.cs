@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 namespace ASP.NET_Core_MVC.DAL.Modules
 {
     //Model
-    public class Department
+    public class Department: ModelBase
     {
-        public int Id { get; set; }
                   // ErrorMessage => in View Module not here
       //  [Required(ErrorMessage ="Code is Required !!!")]// Mapped to not null constrain in DB, Validation in DB & App
         public string Code { get; set; }

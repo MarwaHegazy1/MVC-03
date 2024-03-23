@@ -23,9 +23,9 @@ namespace ASP.NET_Core_MVC.DAL.Modules
         PartTime = 2
     }
 
-    public class Employee
+    public class Employee: ModelBase
     {
-        public int Id { get; set; }
+
         // [Required(ErrorMessage = "Name is Required!")]
         [Required]
         [MaxLength(50, ErrorMessage = "Max Length of Name is 50 Chars")]
