@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ASP.NET_Core_MVC.BLL.Interfaces
 {
-    public interface IDepartmentRepository: IGenericRepository<Department>
+    public interface IEmployeeRepository: IGenericRepository<Employee>
     {
-      
+        IQueryable<Employee> GetEmployeesByAddress(string address);
     }
 }

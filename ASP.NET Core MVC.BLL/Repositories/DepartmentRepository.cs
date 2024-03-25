@@ -11,42 +11,10 @@ using System.Threading.Tasks;
 
 namespace ASP.NET_Core_MVC.BLL.Repositories
 {
-    public class DepartmentRepository : IDepartmentRepository
+    public class DepartmentRepository : GenericRepository<Department>, IDepartmentRepository
     {   //Object member 
-        private readonly ApplicationDbContext _dbContext;
-
-        public DepartmentRepository(ApplicationDbContext dbContext)
+        public DepartmentRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
-            _dbContext = dbContext;
         }
-
-        public int Add(Department entity)
-        {
-            _dbContext.Add(entity);
-            return _dbContext.SaveChanges();
-        }
-        public int Update(Department entity)
-        {
-            _dbContext.Departments.Update(entity);
-            return _dbContext.SaveChanges();
-        }
-        public int Delete(Department entity)
-        {
-            _dbContext.Departments.Remove(entity);
-            return _dbContext.SaveChanges();
-        }
-        public Department Get(int id)
-        {
-            //Part 08 27:00
-            //Search Local First then Search DB 
-           // return _dbContext.Departments.Find(10);
-           return _dbContext.Find<Department>(id);//EF Core 3.1 NEW Feature
-        }
-        public IEnumerable<Department> GetAll()
-        {
-           return _dbContext.Departments.AsNoTracking().ToList();
-        }
-
-       
     }
 }
