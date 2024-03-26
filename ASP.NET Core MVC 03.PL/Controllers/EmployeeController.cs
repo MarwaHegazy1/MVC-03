@@ -19,6 +19,10 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
         }
         public IActionResult Index()
         {
+           // TempData.Keep();
+
+            ViewData["Message"] = "Hello ViewData";
+            ViewBag.Message = "Hello ViewBag";
             var employees = _employeesRepo.GetAll();
             return View(employees);
         }
@@ -34,8 +38,11 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             {
                 var count = _employeesRepo.Add(employee);
                 if (count > 0)
-                
-                    return RedirectToAction(nameof(Index));
+                    TempData["Message"] = "Department is created successfully";
+                else
+                    TempData["Message"] = "An Error Has Occured, Department Not Created";
+
+                return RedirectToAction(nameof(Index));
 
             }
             return View(employee);
