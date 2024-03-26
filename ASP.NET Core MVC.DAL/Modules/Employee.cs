@@ -56,5 +56,8 @@ namespace ASP.NET_Core_MVC.DAL.Modules
         public DateTime CreationDate { get; set; } = DateTime.Now;
 
         public bool IsDeleted { get; set; } = false;
+
+        public int? DepartmentId { get; set; }
+        public Department Department { get; set; }
     }
 }

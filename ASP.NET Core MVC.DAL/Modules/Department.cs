@@ -18,5 +18,9 @@ namespace ASP.NET_Core_MVC.DAL.Modules
         public string Name { get; set; }// Option => ASP.NET Core 5
         [Display(Name = "Date Of Creation")]
         public DateTime DateOfCreation { get; set; }
+
+        public ICollection<Employee> Employees { get; set; } = new HashSet<Employee>();
+
+        
     }
 }
