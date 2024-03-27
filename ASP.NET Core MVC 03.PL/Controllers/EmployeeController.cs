@@ -10,11 +10,13 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeesRepo;
+      //  private readonly IDepartmentRepository _departmentRepository;
         private readonly IWebHostEnvironment _env;
 
-        public EmployeeController(IEmployeeRepository employeesRepo, IWebHostEnvironment env)
+        public EmployeeController(IEmployeeRepository employeesRepo,/*IDepartmentRepository departmentRepository ,*/ IWebHostEnvironment env)
         {
             _employeesRepo = employeesRepo;
+           // _departmentRepository = departmentRepository;
             _env = env;
         }
         public IActionResult Index()
@@ -27,7 +29,8 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             return View(employees);
         }
         public IActionResult Create()
-        { 
+        {
+           // ViewData["Departments"] = _departmentRepository.GetAll();
             return View();
         }
   
@@ -61,6 +64,7 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
         }
         public IActionResult Edit(int? id)
         {
+           // ViewData["Departments"] = _departmentRepository.GetAll();
             return Details(id, "Edit");
         }
 

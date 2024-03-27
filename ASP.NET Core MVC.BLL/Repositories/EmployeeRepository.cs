@@ -22,6 +22,4 @@ namespace ASP.NET_Core_MVC.BLL.Repositories
             return _dbContext.Employees.Where(E=>E.Address.ToLower()== address.ToLower());
         }
     }
-
-
 }
