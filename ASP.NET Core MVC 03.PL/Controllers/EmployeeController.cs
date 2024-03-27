@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Linq;
 
 namespace ASP.NET_Core_MVC_03.PL.Controllers
 {
@@ -19,13 +20,18 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
            // _departmentRepository = departmentRepository;
             _env = env;
         }
-        public IActionResult Index()
+        public IActionResult Index(string searchInp)
         {
-           // TempData.Keep();
+            // TempData.Keep();
 
-            ViewData["Message"] = "Hello ViewData";
-            ViewBag.Message = "Hello ViewBag";
-            var employees = _employeesRepo.GetAll();
+            //  ViewData["Message"] = "Hello ViewData";
+            //  ViewBag.Message = "Hello ViewBag";
+            var employees = Enumerable.Empty<Employee>();
+            if (string.IsNullOrEmpty(searchInp)) 
+                 employees = _employeesRepo.GetAll();           
+            else
+                 employees = _employeesRepo.SearchByNmae(searchInp.ToLower());
+            
             return View(employees);
         }
         public IActionResult Create()

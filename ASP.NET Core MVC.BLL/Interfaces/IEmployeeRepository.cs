@@ -10,5 +10,7 @@ namespace ASP.NET_Core_MVC.BLL.Interfaces
     public interface IEmployeeRepository: IGenericRepository<Employee>
     {
         IQueryable<Employee> GetEmployeesByAddress(string address);
+
+        IQueryable<Employee> SearchByNmae(string name);
     }
 }
