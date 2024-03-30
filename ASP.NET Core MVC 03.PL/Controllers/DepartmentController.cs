@@ -14,19 +14,23 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
 {
     public class DepartmentController : Controller
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IDepartmentRepository _departmentsRepo;
         private readonly IWebHostEnvironment _env;
+        //private readonly IDepartmentRepository _departmentsRepo;
 
-        public DepartmentController(IMapper mapper,IDepartmentRepository departmentsRepo, IWebHostEnvironment env)
+        public DepartmentController(IUnitOfWork unitOfWork,IMapper mapper,
+            IWebHostEnvironment env)
+        // ,IDepartmentRepository departmentsRepo)
         {
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _departmentsRepo = departmentsRepo;
             _env = env;
+           // _departmentsRepo = departmentsRepo;
         }
         public IActionResult Index()
         {
-            var departments = _departmentsRepo.GetAll();
+            var departments = _unitOfWork.DepartmentRepository.GetAll();
             var mappedDep = _mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(departments);
             return View(mappedDep);
         }
@@ -35,13 +39,15 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult Create(DepartmentViewModel departmentVM)
         {
             if (ModelState.IsValid)
             {
                 var mappedDep = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
-                var count = _departmentsRepo.Add(mappedDep); 
+                 _unitOfWork.DepartmentRepository.Add(mappedDep);
+                var count = _unitOfWork.Complete();
                 if (count > 0)
                     return RedirectToAction(nameof(Index));
             }
@@ -53,7 +59,7 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             if (!id.HasValue)
                 return BadRequest(); // 400
 
-            var department = _departmentsRepo.Get(id.Value);
+            var department = _unitOfWork.DepartmentRepository.Get(id.Value);
             var mappedDep = _mapper.Map<Department, DepartmentViewModel>(department);
 
             if (mappedDep is null)
@@ -80,7 +86,8 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             try
             {
                 var mappedDep = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
-                _departmentsRepo.Update(mappedDep);
+                _unitOfWork.DepartmentRepository.Update(mappedDep);
+                _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -104,7 +111,8 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             try
             {
                 var mappedDep = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
-                _departmentsRepo.Delete(mappedDep);
+                _unitOfWork.DepartmentRepository.Delete(mappedDep);
+                _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

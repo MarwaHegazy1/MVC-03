@@ -1,4 +1,5 @@
-﻿using ASP.NET_Core_MVC.BLL.Interfaces;
+﻿using ASP.NET_Core_MVC.BLL;
+using ASP.NET_Core_MVC.BLL.Interfaces;
 using ASP.NET_Core_MVC.DAL.Modules;
 using ASP.NET_Core_MVC_03.PL.ViewModels;
 using AutoMapper;
@@ -14,14 +15,21 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly IEmployeeRepository _employeesRepo;
-      //  private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
+       /// private readonly IEmployeeRepository _employeesRepo;
+       /// private readonly IDepartmentRepository _departmentRepository;
         private readonly IWebHostEnvironment _env;
 
-        public EmployeeController(IMapper mapper,IEmployeeRepository employeesRepo,/*IDepartmentRepository departmentRepository ,*/ IWebHostEnvironment env)
+        public EmployeeController(
+            IMapper mapper,
+            IUnitOfWork unitOfWork,
+            IWebHostEnvironment env)
+            /// IEmployeeRepository employeesRepo,
+            ///IDepartmentRepository departmentRepository , )
         {
             _mapper = mapper;
-            _employeesRepo = employeesRepo;
+            _unitOfWork = unitOfWork;
+           // _employeesRepo = employeesRepo;
            // _departmentRepository = departmentRepository;
             _env = env;
         }
@@ -32,11 +40,12 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             //  ViewData["Message"] = "Hello ViewData";
             //  ViewBag.Message = "Hello ViewBag";
             var employees = Enumerable.Empty<Employee>();
-            if (string.IsNullOrEmpty(searchInp)) 
-                 employees = _employeesRepo.GetAll();           
+            if (string.IsNullOrEmpty(searchInp))
+                //employees = _employeesRepo.GetAll();
+                employees = _unitOfWork.EmployeeRepository.GetAll();
             else
-                 employees = _employeesRepo.SearchByNmae(searchInp.ToLower());
-
+                // employees = _employeesRepo.SearchByNmae(searchInp.ToLower());
+                employees = _unitOfWork.EmployeeRepository.SearchByNmae(searchInp.ToLower());
             var mappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
             return View(mappedEmp);
         }
@@ -52,8 +61,9 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             if (ModelState.IsValid)
             {
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee> (employeeVM);
-                var count = _employeesRepo.Add(mappedEmp);
-
+                //var count = _employeesRepo.Add(mappedEmp);
+                 _unitOfWork.EmployeeRepository.Add(mappedEmp);
+                var count = _unitOfWork.Complete();
                 if (count > 0)
                     TempData["Message"] = "Department is created successfully";
                 else
@@ -69,7 +79,8 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             if (!id.HasValue)
                 return BadRequest(); // 400
 
-            var employee = _employeesRepo.Get(id.Value);
+            //var employee = _employeesRepo.Get(id.Value);
+            var employee = _unitOfWork.EmployeeRepository.Get(id.Value);
             var mappedEmp = _mapper.Map<Employee, EmployeeViewModel>(employee);
 
             if (mappedEmp is null)
@@ -97,7 +108,9 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 
-                _employeesRepo.Update(mappedEmp);
+                //_employeesRepo.Update(mappedEmp);
+                _unitOfWork.EmployeeRepository.Update(mappedEmp);
+                _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -121,7 +134,8 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 
-                _employeesRepo.Delete(mappedEmp);
+                //_employeesRepo.Delete(mappedEmp);
+                _unitOfWork.EmployeeRepository.Delete(mappedEmp);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
