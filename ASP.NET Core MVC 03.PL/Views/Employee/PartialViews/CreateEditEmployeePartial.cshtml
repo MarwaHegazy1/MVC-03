@@ -4,7 +4,7 @@
 @inject IUnitOfWork _unitOfWork
 
 @{
-    var departments = new SelectList(_unitOfWork.DepartmentRepository.GetAll()/*, ViewData["Departments"] as IEnumerable<Department>*/, nameof(Department.Id), nameof(Department.Name));
+    var departments = new SelectList(_unitOfWork.Repository<Department>().GetAll()/*, ViewData["Departments"] as IEnumerable<Department>*/, nameof(Department.Id), nameof(Department.Name));
 }
 
 <div class="form-group">

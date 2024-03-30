@@ -1,7 +1,9 @@
 ﻿using ASP.NET_Core_MVC.BLL.Interfaces;
 using ASP.NET_Core_MVC.BLL.Repositories;
 using ASP.NET_Core_MVC.DAL.Data;
+using ASP.NET_Core_MVC.DAL.Modules;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,17 +14,32 @@ namespace ASP.NET_Core_MVC.BLL
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _dbContext;
-
-        //Automatic Property
-        public IEmployeeRepository EmployeeRepository { get; set; }
-        public IDepartmentRepository DepartmentRepository { get; set; }
-
+        private Hashtable _repositories;
         public UnitOfWork(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            EmployeeRepository = new EmployeeRepository(_dbContext);
-            DepartmentRepository=new DepartmentRepository(_dbContext);  
+            _repositories = new Hashtable();
         }
+        public IGenericRepository<T> Repository<T>() where T : ModelBase
+        {
+            var key = typeof(T).Name;
+            if (!_repositories.ContainsKey(key))
+            {
+              
+                if (key == nameof(Employee))
+                {
+                   var repository = new EmployeeRepository(_dbContext);
+                    _repositories.Add(key, repository); ;
+                }
+                else
+                {
+                    var repository = new GenericRepository<T>(_dbContext);
+                    _repositories.Add(key, repository); ;
+                }
+            }
+
+            return _repositories[key] as IGenericRepository<T>;
+         }
         public int Complete()
         {
             return _dbContext.SaveChanges();
@@ -32,5 +49,7 @@ namespace ASP.NET_Core_MVC.BLL
         {
             _dbContext.Dispose();
         }
+
+    
     }
 }

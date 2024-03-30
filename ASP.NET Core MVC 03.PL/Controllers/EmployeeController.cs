@@ -1,5 +1,6 @@
 ﻿using ASP.NET_Core_MVC.BLL;
 using ASP.NET_Core_MVC.BLL.Interfaces;
+using ASP.NET_Core_MVC.BLL.Repositories;
 using ASP.NET_Core_MVC.DAL.Modules;
 using ASP.NET_Core_MVC_03.PL.ViewModels;
 using AutoMapper;
@@ -40,12 +41,13 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             //  ViewData["Message"] = "Hello ViewData";
             //  ViewBag.Message = "Hello ViewBag";
             var employees = Enumerable.Empty<Employee>();
+            var employeeRepo = _unitOfWork.Repository<Employee>() as EmployeeRepository;
             if (string.IsNullOrEmpty(searchInp))
                 //employees = _employeesRepo.GetAll();
-                employees = _unitOfWork.EmployeeRepository.GetAll();
+                employees = employeeRepo.GetAll();
             else
                 // employees = _employeesRepo.SearchByNmae(searchInp.ToLower());
-                employees = _unitOfWork.EmployeeRepository.SearchByNmae(searchInp.ToLower());
+                employees = employeeRepo.SearchByNmae(searchInp.ToLower());
             var mappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
             return View(mappedEmp);
         }
@@ -62,7 +64,7 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee> (employeeVM);
                 //var count = _employeesRepo.Add(mappedEmp);
-                 _unitOfWork.EmployeeRepository.Add(mappedEmp);
+                 _unitOfWork.Repository<Employee>().Add(mappedEmp);
                 var count = _unitOfWork.Complete();
                 if (count > 0)
                     TempData["Message"] = "Department is created successfully";
@@ -80,7 +82,7 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
                 return BadRequest(); // 400
 
             //var employee = _employeesRepo.Get(id.Value);
-            var employee = _unitOfWork.EmployeeRepository.Get(id.Value);
+            var employee = _unitOfWork.Repository<Employee>().Get(id.Value);
             var mappedEmp = _mapper.Map<Employee, EmployeeViewModel>(employee);
 
             if (mappedEmp is null)
@@ -109,7 +111,7 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 
                 //_employeesRepo.Update(mappedEmp);
-                _unitOfWork.EmployeeRepository.Update(mappedEmp);
+                _unitOfWork.Repository<Employee>().Update(mappedEmp);
                 _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -135,7 +137,7 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 
                 //_employeesRepo.Delete(mappedEmp);
-                _unitOfWork.EmployeeRepository.Delete(mappedEmp);
+                _unitOfWork.Repository<Employee>().Delete(mappedEmp);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
