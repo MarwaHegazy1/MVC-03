@@ -15,7 +15,12 @@ namespace ASP.NET_Core_MVC.DAL.Data.Configurations
         {
 
             // Fluent APIs for "Employee" Domain
-            builder.Property(E => E.Name).HasColumnType("varchar").HasMaxLength(50).IsRequired(); builder.Property(E => E.Address).IsRequired();
+            builder.Property(E => E.Name)
+                .HasColumnType("varchar")
+                .HasMaxLength(50)
+                .IsRequired(true);
+            builder.Property(E => E.Address)
+                .IsRequired();
             builder.Property(E => E.Salary).HasColumnType("decimal(12, 2)");
             builder.Property(E => E.Gender).HasConversion(
                 (Gender) => Gender.ToString(),
