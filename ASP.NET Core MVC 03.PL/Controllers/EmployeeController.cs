@@ -96,6 +96,8 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             if (mappedEmp is null)
                 return NotFound(); // 404
 
+            if(viewName.Equals("Delete",StringComparison.OrdinalIgnoreCase))
+            TempData["ImageName"] = employee.ImageName;
             return View(viewName, mappedEmp);
         }
         public IActionResult Edit(int? id)
@@ -142,11 +144,18 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
         {
             try
             {
-                var mappedEmp = _mapper.Map<EmployeeResponseViewModel, Employee>(employeeVM);
+                employeeVM.ImageName = TempData["ImageName"] as string;
 
-                //_employeesRepo.Delete(mappedEmp);
+                var mappedEmp = _mapper.Map<EmployeeResponseViewModel, Employee>(employeeVM);              
                 _unitOfWork.Repository<Employee>().Delete(mappedEmp);
-                return RedirectToAction(nameof(Index));
+               var count = _unitOfWork.Complete();
+                if(count > 0)
+                {
+                    DocumentSetting.DeleteFile(employeeVM.ImageName, "images");
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(employeeVM);
+
             }
             catch (Exception ex)
             {
