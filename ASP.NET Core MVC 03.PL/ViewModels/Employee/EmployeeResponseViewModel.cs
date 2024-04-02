@@ -23,5 +23,7 @@ namespace ASP.NET_Core_MVC_03.PL.ViewModels.Employee
 
         public int? DepartmentId { get; set; }
         public NET_Core_MVC.DAL.Modules.Department Department { get; set; }
+        public string ImageName { get; set; }
+
     }
 }
