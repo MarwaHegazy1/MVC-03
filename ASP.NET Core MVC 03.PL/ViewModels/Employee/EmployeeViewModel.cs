@@ -1,12 +1,13 @@
 ﻿using ASP.NET_Core_MVC.DAL.Modules;
 using System.ComponentModel.DataAnnotations;
 using System;
+using Microsoft.AspNetCore.Http;
 
-namespace ASP.NET_Core_MVC_03.PL.ViewModels
+namespace ASP.NET_Core_MVC_03.PL.ViewModels.Employee
 {
-    public class EmployeeViewModel
+      public class EmployeeViewModel
     {
-        public int Id { get; set; }
+     
         // [Required(ErrorMessage = "Name is Required!")]
         [Required]
         [MaxLength(50, ErrorMessage = "Max Length of Name is 50 Chars")]
@@ -34,8 +35,10 @@ namespace ASP.NET_Core_MVC_03.PL.ViewModels
 
         public Gender Gender { get; set; }//text of type int
         public EmpType EmpType { get; set; }
- 
+
         public int? DepartmentId { get; set; }
-        public Department Department { get; set; }
+        public NET_Core_MVC.DAL.Modules.Department Department { get; set; }
+        public IFormFile Image { get; set; }
+        public string ImageName { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace ASP.NET_Core_MVC_03.PL.Helpers
     {
         public static string UploadFile(IFormFile file ,string folderName)
         {
-            string folderPath=Path.Combine(Directory.GetCurrentDirectory(),"wwwroot\\files" ,folderName);
+            string folderPath=Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\files", folderName);
             if(!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
             string fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";

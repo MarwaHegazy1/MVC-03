@@ -2,6 +2,7 @@
 using ASP.NET_Core_MVC.BLL.Repositories;
 using ASP.NET_Core_MVC.DAL.Modules;
 using ASP.NET_Core_MVC_03.PL.ViewModels;
+using ASP.NET_Core_MVC_03.PL.ViewModels.Department;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,7 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
         public IActionResult Index()
         {
             var departments = _unitOfWork.Repository<Department>().GetAll();
-            var mappedDep = _mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(departments);
+            var mappedDep = _mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentResponseViewModel>>(departments);
             return View(mappedDep);
         }
 
@@ -60,7 +61,7 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
                 return BadRequest(); // 400
 
             var department = _unitOfWork.Repository<Department>().Get(id.Value);
-            var mappedDep = _mapper.Map<Department, DepartmentViewModel>(department);
+            var mappedDep = _mapper.Map<Department, DepartmentResponseViewModel>(department);
 
             if (mappedDep is null)
                 return NotFound(); // 404
@@ -77,8 +78,6 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
         //[Authorize]//validate token 
         public IActionResult Edit([FromRoute] int id, DepartmentViewModel departmentVM)
         {
-            if (id != departmentVM.Id)
-                return BadRequest();
 
             if (!ModelState.IsValid)
                 return View(departmentVM);
@@ -106,11 +105,11 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             return Details(id, "Delete");
         }
         [HttpPost]
-        public IActionResult Delete(DepartmentViewModel departmentVM)
+        public IActionResult Delete(DepartmentResponseViewModel departmentVM)
         {
             try
             {
-                var mappedDep = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
+                var mappedDep = _mapper.Map<DepartmentResponseViewModel, Department>(departmentVM);
                 _unitOfWork.Repository<Department>().Delete(mappedDep);
                 _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));

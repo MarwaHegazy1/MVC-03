@@ -11,6 +11,6 @@ namespace ASP.NET_Core_MVC.BLL.Interfaces
     {
         IQueryable<Employee> GetEmployeesByAddress(string address);
 
-        IQueryable<Employee> SearchByNmae(string name);
+        IQueryable<Employee> SearchByName(string name);
     }
 }
