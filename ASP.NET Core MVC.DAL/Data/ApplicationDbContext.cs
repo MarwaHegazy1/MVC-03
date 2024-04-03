@@ -1,5 +1,6 @@
 ﻿using ASP.NET_Core_MVC.DAL.Data.Configurations;
 using ASP.NET_Core_MVC.DAL.Modules;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ASP.NET_Core_MVC.DAL.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :base(options)
         {
@@ -24,6 +25,7 @@ namespace ASP.NET_Core_MVC.DAL.Data
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
            // modelBuilder.ApplyConfiguration<Department>(new DepartmentCnfigurations());
              modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
