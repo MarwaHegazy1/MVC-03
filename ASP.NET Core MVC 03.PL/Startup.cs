@@ -6,6 +6,7 @@ using ASP.NET_Core_MVC_03.PL.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,8 +31,8 @@ namespace ASP.NET_Core_MVC_03.PL
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            //services.AddScoped<ApplicationDbContext>();
-            //services.AddScoped<DbContextOptions<ApplicationDbContext>>();
+            ///services.AddScoped<ApplicationDbContext>();
+            ///services.AddScoped<DbContextOptions<ApplicationDbContext>>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -39,7 +40,14 @@ namespace ASP.NET_Core_MVC_03.PL
             }).AddApplicationServices();
 
             services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
-        }
+
+            ///services.AddScoped<UserManager<ApplicationUser>>();
+            ///services.AddScoped<SignInManager<ApplicationUser>>();
+            ///services.AddScoped<RoleManager<IdentityRole>>();
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
