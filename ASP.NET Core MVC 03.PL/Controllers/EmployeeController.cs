@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ASP.NET_Core_MVC_03.PL.Controllers
 {
@@ -19,14 +20,9 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-       /// private readonly IEmployeeRepository _employeesRepo;
-       /// private readonly IDepartmentRepository _departmentRepository;
         private readonly IWebHostEnvironment _env;
 
-        public EmployeeController(
-            IMapper mapper,
-            IUnitOfWork unitOfWork,
-            IWebHostEnvironment env)
+        public EmployeeController(IMapper mapper,IUnitOfWork unitOfWork,IWebHostEnvironment env)
             /// IEmployeeRepository employeesRepo,
             ///IDepartmentRepository departmentRepository , )
         {
@@ -36,40 +32,34 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
            // _departmentRepository = departmentRepository;
             _env = env;
         }
-        public IActionResult Index(string searchInp)
-        {
-            // TempData.Keep();
-
-            //  ViewData["Message"] = "Hello ViewData";
-            //  ViewBag.Message = "Hello ViewBag";
+        public async Task<IActionResult> Index(string searchInp)
+        {   
             var employees = Enumerable.Empty<Employee>();
             var employeeRepo = _unitOfWork.Repository<Employee>() as EmployeeRepository;
             if (string.IsNullOrEmpty(searchInp))
-                //employees = _employeesRepo.GetAll();
-                employees = employeeRepo.GetAll();
+                employees = await employeeRepo.GetAllAsync();
             else
-                // employees = _employeesRepo.SearchByNmae(searchInp.ToLower());
                 employees = employeeRepo.SearchByName(searchInp.ToLower());
+          
             var mappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeResponseViewModel>>(employees);
             return View(mappedEmp);
         }
         public IActionResult Create()
         {
-           // ViewData["Departments"] = _departmentRepository.GetAll();
             return View();
         }
   
         [HttpPost]
-        public IActionResult Create(EmployeeViewModel employeeVM)
+        public async Task<IActionResult> Create(EmployeeViewModel employeeVM)
         {
             if (ModelState.IsValid)
             {
-                employeeVM.ImageName = DocumentSetting.UploadFile(employeeVM.Image, "images");
+                employeeVM.ImageName =await  DocumentSetting.UploadFile(employeeVM.Image, "images");
 
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee> (employeeVM);
                
                  _unitOfWork.Repository<Employee>().Add(mappedEmp);
-                var count = _unitOfWork.Complete();
+                var count = await _unitOfWork.Complete();
                 
                 if (count > 0)
                 {
@@ -84,13 +74,13 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             }
             return View(employeeVM);
         }
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id, string viewName = "Details")
         {
             if (!id.HasValue)
                 return BadRequest(); // 400
 
             //var employee = _employeesRepo.Get(id.Value);
-            var employee = _unitOfWork.Repository<Employee>().Get(id.Value);
+            var employee =await _unitOfWork.Repository<Employee>().GetAsync(id.Value);
             var mappedEmp = _mapper.Map<Employee, EmployeeResponseViewModel>(employee);
 
             if (mappedEmp is null)
@@ -100,29 +90,25 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             TempData["ImageName"] = employee.ImageName;
             return View(viewName, mappedEmp);
         }
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-           // ViewData["Departments"] = _departmentRepository.GetAll();
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, EmployeeViewModel employeeVM)
+        public async Task<IActionResult> Edit([FromRoute] int id, EmployeeViewModel employeeVM)
         {
-            //if (id != employeeVM.Id)
-            //    return BadRequest();
-
             if (!ModelState.IsValid)
                 return View(employeeVM);
 
             try
-            {
-                var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
+            {               
 
-                //_employeesRepo.Update(mappedEmp);
+                var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
                 _unitOfWork.Repository<Employee>().Update(mappedEmp);
-                _unitOfWork.Complete();
+              await _unitOfWork.Complete();
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -135,12 +121,13 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
                 return View(employeeVM);
             }
         }
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return Details(id, "Delete");
+            return  await Details(id, "Delete");
         }
+
         [HttpPost]
-        public IActionResult Delete(EmployeeResponseViewModel employeeVM)
+        public async Task<IActionResult> Delete(EmployeeResponseViewModel employeeVM)
         {
             try
             {
@@ -148,7 +135,7 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
 
                 var mappedEmp = _mapper.Map<EmployeeResponseViewModel, Employee>(employeeVM);              
                 _unitOfWork.Repository<Employee>().Delete(mappedEmp);
-               var count = _unitOfWork.Complete();
+               var count = await _unitOfWork.Complete();
                 if(count > 0)
                 {
                     DocumentSetting.DeleteFile(employeeVM.ImageName, "images");
