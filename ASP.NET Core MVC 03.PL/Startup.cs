@@ -3,6 +3,7 @@ using ASP.NET_Core_MVC.BLL.Repositories;
 using ASP.NET_Core_MVC.DAL.Data;
 using ASP.NET_Core_MVC_03.PL.Extensions;
 using ASP.NET_Core_MVC_03.PL.Helpers;
+using ASP.NET_Core_MVC_03.PL.Services.EmailSender;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -40,6 +41,8 @@ namespace ASP.NET_Core_MVC_03.PL
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             }).AddApplicationServices();
 
+            services.AddTransient<IEmailSender, EmailSender>();
+
             services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
 
             ///services.AddScoped<UserManager<ApplicationUser>>();
@@ -47,7 +50,8 @@ namespace ASP.NET_Core_MVC_03.PL
             ///services.AddScoped<RoleManager<IdentityRole>>();
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
 			/// services.AddAuthentication();
 			///services.ConfigureApplicationCookie(options =>
