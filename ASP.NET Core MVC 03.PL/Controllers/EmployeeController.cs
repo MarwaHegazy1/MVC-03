@@ -4,7 +4,6 @@ using ASP.NET_Core_MVC.BLL.Repositories;
 using ASP.NET_Core_MVC.DAL.Modules;
 using ASP.NET_Core_MVC_03.PL.Helpers;
 using ASP.NET_Core_MVC_03.PL.ViewModels;
-using ASP.NET_Core_MVC_03.PL.ViewModels.Employee;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +40,7 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             else
                 employees = employeeRepo.SearchByName(searchInp.ToLower());
           
-            var mappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeResponseViewModel>>(employees);
+            var mappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
             return View(mappedEmp);
         }
         public IActionResult Create()
@@ -81,7 +80,7 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
 
             //var employee = _employeesRepo.Get(id.Value);
             var employee =await _unitOfWork.Repository<Employee>().GetAsync(id.Value);
-            var mappedEmp = _mapper.Map<Employee, EmployeeResponseViewModel>(employee);
+            var mappedEmp = _mapper.Map<Employee, EmployeeViewModel>(employee);
 
             if (mappedEmp is null)
                 return NotFound(); // 404
@@ -127,13 +126,13 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(EmployeeResponseViewModel employeeVM)
+        public async Task<IActionResult> Delete(EmployeeViewModel employeeVM)
         {
             try
             {
                 employeeVM.ImageName = TempData["ImageName"] as string;
 
-                var mappedEmp = _mapper.Map<EmployeeResponseViewModel, Employee>(employeeVM);              
+                var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);              
                 _unitOfWork.Repository<Employee>().Delete(mappedEmp);
                var count = await _unitOfWork.Complete();
                 if(count > 0)

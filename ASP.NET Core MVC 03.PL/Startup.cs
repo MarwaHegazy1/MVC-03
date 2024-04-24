@@ -47,6 +47,8 @@ namespace ASP.NET_Core_MVC_03.PL
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            
+            //services.AddAuthentication();
 		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
