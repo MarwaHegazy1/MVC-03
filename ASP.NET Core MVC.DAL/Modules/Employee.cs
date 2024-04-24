@@ -26,6 +26,7 @@ namespace ASP.NET_Core_MVC.DAL.Modules
     //Model
     public class Employee: ModelBase
     {
+        public string ImageName { get; set; }
 
         [Required]
         [MaxLength(50)]      

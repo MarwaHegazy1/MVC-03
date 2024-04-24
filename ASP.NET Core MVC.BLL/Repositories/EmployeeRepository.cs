@@ -22,9 +22,16 @@ namespace ASP.NET_Core_MVC.BLL.Repositories
             return _dbContext.Employees.Where(E=>E.Address.ToLower()== address.ToLower());
         }
 
-        public IQueryable<Employee> SearchByNmae(string name)
+        public IQueryable<Employee> SearchByName(string name)
         {
             return _dbContext.Employees.Where(E => E.Name.ToLower().Contains(name.ToLower()));       
         }
+
+        public override async Task<IEnumerable<Employee>> GetAllAsync()
+        {
+            return await _dbContext.Set<Employee>().Include(E => E.Department).AsNoTracking().ToListAsync();
+
+        }
+
     }
 }
