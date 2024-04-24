@@ -85,5 +85,11 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             }
 			return View();
 		}
+
+        public async new Task<IActionResult> SignOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(SignIn));
+        }
 	}
 }

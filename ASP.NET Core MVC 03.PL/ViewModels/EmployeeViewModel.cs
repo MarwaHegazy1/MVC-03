@@ -1,15 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System;
+﻿using ASP.NET_Core_MVC.DAL.Modules;
 using Microsoft.AspNetCore.Http;
-using ASP.NET_Core_MVC.DAL.Modules;
+using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace ASP.NET_Core_MVC_03.PL.ViewModels
 {
     public class EmployeeViewModel
     {
-		public int Id { get; set; }
-		// [Required(ErrorMessage = "Name is Required!")]
-		[Required]
+        public int Id { get; set; }
+        // [Required(ErrorMessage = "Name is Required!")]
+        [Required]
         [MaxLength(50, ErrorMessage = "Max Length of Name is 50 Chars")]
         [MinLength(5, ErrorMessage = "Min Length of Name is 5 Chars")]
         public string Name { get; set; }
