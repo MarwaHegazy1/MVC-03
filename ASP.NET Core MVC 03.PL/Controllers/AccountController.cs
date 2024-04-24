@@ -91,5 +91,25 @@ namespace ASP.NET_Core_MVC_03.PL.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(SignIn));
         }
+
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendResetPasswordEmail(ForgetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user is not null)
+                {
+
+                }
+                ModelState.AddModelError(string.Empty, "There is No Account with this Email!!");
+			}
+				return View(model);
+        }
 	}
 }
